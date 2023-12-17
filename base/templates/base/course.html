@@ -1,0 +1,61 @@
+{% extends 'main.html' %}
+
+
+{% block content %}
+
+<style>
+    .course-container {
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+    }
+</style>
+
+<div class="course-container">
+
+    <div>
+
+   
+        <h1>{{course.name}}</h1>
+
+        <p>{{course.description}}</p>
+ 
+        <div class="comment-wrapper">
+            <h3>Class Room</h3>
+            <hr>
+
+            {% for message in course_messages %}
+                <div>
+                    {% if request.user == message.user %}
+                    <a href="{% url 'delete-message' message.id %}">Delete</a>
+                    {% endif %}
+                    <small>@{{message.user}} {{message.created|timesince}} ago </small>
+                    <p>{{message.body}}</p>
+                    <hr>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if request.user.is_authenticated %}
+        <div class="comment-form">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <input type="text" name="body" placeholder="Write your comment here..."/>
+            </form>
+        </div>   
+        {% endif %}
+
+    </div>
+
+    <div>
+        <h3>Participants</h3>
+        <hr>
+
+        {% for user in participants %}
+            <div>
+                <p>@{{user.username}}</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
