@@ -3,11 +3,9 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q 
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
-from .models import Course, Topic, Message
-from .forms import CourseForm
+from .models import Course, Topic, Message, User
+from .forms import CourseForm, UserForm, MyUserCreationForm
 # Create your views here.
 
 # courses = [
@@ -22,15 +20,15 @@ def loginPage(request):
         return redirect('home')
 
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST.get('email').lower()
         password = request.POST.get('password')
 
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(email=email)
         except:
             messages.error(request, 'User not found in our system.')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
 
         if user is not None:
             login(request, user)
@@ -46,10 +44,10 @@ def logoutUser(request):
     return redirect('home')     
 
 def registerPage(request):
-    form = UserCreationForm()
+    form = MyUserCreationForm()
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = MyUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
@@ -71,9 +69,10 @@ def home(request):
         )
         
 
-    topics = Topic.objects.all()
+    topics = Topic.objects.all()[0:5]
     course_count = courses.count()
-    course_messages = Message.objects.filter(Q(course__topic__name__icontains=q))
+    course_messages = Message.objects.filter(
+        Q(course__topic__name__icontains=q))[0:3]
 
     context =  {'courses': courses, 'topics': topics, 
                 'course_count': course_count, 'course_messages': course_messages}
@@ -109,32 +108,40 @@ def userProfile(request, pk):
 @login_required(login_url='login')
 def createCourse(request):
     form = CourseForm()
- 
+    topics = Topic.objects.all()
     if request.method == 'POST':
-       form = CourseForm(request.POST)
-       if form.is_valid():
-        course = form.save(commit=False)
-        course.host = request.user
-        course.save()
+        topic_name = request.POST.get('topic')
+        topic, created = Topic.objects.get_or_create(name=topic_name)
+
+        Course.objects.create(
+            host=request.user,
+            topic=topic,
+            name=request.POST.get('name'),
+            description=request.POST.get('description'),
+        )
         return redirect('home')
-    context = {'form': form} 
+
+    context = {'form': form, 'topics': topics}
     return render(request, 'base/course_form.html', context)
 
 @login_required(login_url='login')
 def updateCourse(request, pk):
     course = Course.objects.get(id=pk)
     form = CourseForm(instance=course)
-
+    topics = Topic.objects.all()
     if request.user != course.host:
         return HttpResponse('Access Denied !!')
     
     if request.method == 'POST':
-        form = CourseForm(request.POST, instance=course)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-        
-    context = {'form': form}
+        topic_name = request.POST.get('topic')
+        topic, created = Topic.objects.get_or_create(name=topic_name)
+        course.name = request.POST.get('name')
+        course.topic = topic
+        course.description = request.POST.get('description')
+        course.save()
+        return redirect('home')
+
+    context = {'form': form, 'topics': topics, 'course': course}
     return render(request, 'base/course_form.html', context)
 
 @login_required(login_url='login')
@@ -160,3 +167,28 @@ def deleteMessage(request, pk):
         message.delete()
         return redirect('home')
     return render(request, 'base/delete.html', {'obj':message})
+
+
+@login_required(login_url='login')
+def updateUser(request):
+    user = request.user
+    form = UserForm(instance=user)
+
+    if request.method == 'POST':
+        form = UserForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('user-profile', pk=user.id)
+
+    return render(request, 'base/update-user.html', {'form': form})
+
+
+def topicsPage(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    topics = Topic.objects.filter(name__icontains=q)
+    return render(request, 'base/topics.html', {'topics': topics})
+
+
+def activityPage(request):
+    course_messages = Message.objects.all()
+    return render(request, 'base/activity.html', {'course_messages': course_messages})
