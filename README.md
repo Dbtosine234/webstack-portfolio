@@ -1,5 +1,5 @@
 <br/>
-<h1 align="center">StudyBuddy</h1>
+<h1 align="center">Ruto-Elearning</h1>
 <br/>
 
 i<p align="center">
@@ -46,7 +46,7 @@ See the live app here:
 <td width="25%">
 <br>
 <p align="center">
-  Room Conversation 
+ Class Room
 </p>
 <img src=""> 
 </td>
