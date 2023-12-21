@@ -11,7 +11,7 @@ In this project we've tried to build a Ruto-Elearningd like app with Python Djan
 <br />
 <br />
 See the live app here: 
-<a href="/"><strong></strong></a>
+<a href="https://youtube.com/shorts/jZ4JWq2Xfk8?si=i8GIZzvMFIuS20ke/"><strong></strong></a>
 </p>
 
 <!-- TABLE OF CONTENTS -->
