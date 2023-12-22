@@ -3,7 +3,40 @@
 <br/>
 
 i<p align="center">
-In this project we've tried to build a Ruto-Elearningd like app with Python Django ...
+
+## Description
+Welcome to our platform, Ruto-Elearning.
+In this project we've tried to build a Ruto-Elearning like app with P
+ython Django.
+
+ - a website that  intended to promote learning
+and
+information exchange in a group setting.
+ - Using our platform, you can set up virtual spaces where people wit
+h similar interests may congregate, have
+conversations, exchange insightful knowledge, and learn from one anot
+her.
+## Features
+### Account Creation and Registration
+ - Visitors are able to sign up and set up an account on the
+website.
+ - With their login information, they may log in.
+### Room Creation
+ - To encourage conversation and study, users can construct rooms on
+a variety of subjects.
+### Room Participation
+ - Individuals can enter already-existing rooms and take part in conv
+ersational exchanges.
+### Messaging
+ - In order to interact with other users, users can send messages wit
+hin the rooms.
+### Recent Activities Log
+ - It serves as a communication tool, allowing members to stay inform
+ed about ongoing activities.
+### Searching
+ - To search topics or discussions that you are interested in to take
+ part.
+## Getting Started
 <br/>
 </p>
 <p align="center">
@@ -11,7 +44,7 @@ In this project we've tried to build a Ruto-Elearningd like app with Python Djan
 <br />
 <br />
 See the live app here: 
-<a href="https://youtube.com/shorts/jZ4JWq2Xfk8?si=i8GIZzvMFIuS20ke/"><strong></strong></a>
+<a href="https://youtube.com/shorts/jZ4JWq2Xfk8?si=i8GIZzvMFIuS20ke/">Watch Demo</a>
 </p>
 
 <!-- TABLE OF CONTENTS -->
